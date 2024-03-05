@@ -1,0 +1,28 @@
+<div class="genre-selector">
+  <h2>Select Genres</h2>
+  <div *ngFor="let genre of genres">
+    <label>
+      <input
+        type="checkbox"
+        [value]="genre"
+        (change)="switchGenres($event, genre)"
+      />
+      {{ genre }}
+    </label>
+  </div>
+</div>
+
+<div class="movies-container">
+  @for (movie of filteredMovies; track $index) {
+  <div
+    class="movie-card"
+    [routerLink]="['/movies/', movie.id]"
+    [appHighlighting]="'yellow'"
+  >
+    <h2>{{ movie.title }}</h2>
+    <p>Rating: {{ movie.rating }}</p>
+    <p>Director: {{ movie.director.fullname }}</p>
+    <p>Genres: {{ movie.genres.join(", ") | lowercase }}</p>
+  </div>
+  }
+</div>

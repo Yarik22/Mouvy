@@ -1,0 +1,22 @@
+.container {
+  position: absolute;
+  left: 2vw;
+  width: 96vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  header {
+    width: 100%;
+    text-align: center;
+  }
+  main {
+    width: 100%;
+    flex: 1;
+  }
+  footer {
+    width: 100%;
+    text-align: center;
+  }
+}
