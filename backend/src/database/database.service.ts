@@ -1,28 +1,52 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Pool } from 'pg';
+import {
+  DeepPartial,
+  DeleteResult,
+  FindOneOptions,
+  FindOptionsWhere,
+  FindOptionsWhereProperty,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
+import { Observable, defer } from 'rxjs';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { BaseEntity } from './entities/baseEntity.entity';
 
 @Injectable()
-export class DatabaseService {
-  private pool: Pool;
+export abstract class DatabaseService<T extends BaseEntity>{
+  constructor(
+    protected readonly repository: Repository<T>) {}
 
-  constructor(private configService: ConfigService) {
-    this.pool = new Pool({
-      user: configService.get<string>('database.user'),
-      host: configService.get<string>('database.host'),
-      database: configService.get<string>('database.database'),
-      password: configService.get<string>('database.password'),
-      port: configService.get<number>('database.port'),
-    });
+  findAll(): Observable<T[]> {
+    return defer(() => this.repository.find());
   }
 
-  async query(queryText: string, params?: any[]): Promise<any> {
-    const client = await this.pool.connect();
-    try {
-      const result = await client.query(queryText, params);
-      return result.rows;
-    } finally {
-      client.release();
-    }
+  findById(id: string): Observable<T> {
+    const options: FindOneOptions<T> = { where: { id: id } as FindOptionsWhere<T> };
+    return defer(() => this.repository.findOne(options));
+  }
+  create(entity: DeepPartial<T>): Observable<T> {
+    return defer(() => this.repository.save(entity));
+  }
+
+  update(
+    id: string,
+    entity: QueryDeepPartialEntity<T>,
+  ): Observable<UpdateResult> {
+    return defer(() => this.repository.update(id, entity));
+  }
+
+  delete(id: string): Observable<DeleteResult> {
+    return defer(() => this.repository.delete(id));
+  }
+
+  paginate(page: number, limit: number): Observable<[T[], number]> {
+    const offset = (page - 1) * limit;
+    return defer(() =>
+      this.repository.findAndCount({
+        take: limit,
+        skip: offset,
+      }),
+    );
   }
 }

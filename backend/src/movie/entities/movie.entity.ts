@@ -1,29 +1,18 @@
-export type Movie = {
-  id: number;
+import { Entity, Column } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { BaseEntity } from 'src/database/entities/baseEntity.entity';
+
+@Entity('movie')
+export class Movie extends BaseEntity {
+  @Column()
+  @ApiProperty({ description: 'The title of the movie.' })
   title: string;
-  rating: number;
-  releaseDate: Date;
-  duration: string;
-  pegi: number;
-  director: Director;
-  genres: Genre[];
-};
 
+  @Column()
+  @ApiProperty({ description: 'The director of the movie.' })
+  director: string;
 
-export enum Genre {
-  Anime = 'Anime',
-  Action = 'Action',
-  Adventure = 'Adventure',
-  Comedy = 'Comedy',
-  Crime = 'Crime',
-  Documentary = 'Documentary',
-  Drama = 'Drama',
-  Fantasy = 'Fantasy',
-  Horror = 'Horror',
-  Romance = 'Romance',
-  ScienceFiction = 'Science fiction',
+  @Column({ type: 'integer' })
+  @ApiProperty({ description: 'The release year of the movie.' })
+  year: number;
 }
-export type Director = {
-  id: string;
-  fullname: string;
-};

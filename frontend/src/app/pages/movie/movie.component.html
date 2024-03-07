@@ -1,8 +1,0 @@
-<div class="movie-card" *ngIf="movie">
-  <h2>{{ movie!.title }}</h2>
-  <p>Rating: {{ movie!.rating }}</p>
-  <p>Release Date: {{ movie!.releaseDate | date }}</p>
-  <p>Duration: {{ movie!.duration | duration  }}</p>
-  <p>Genres: {{ movie!.genres.join(", ") }}</p>
-  <p>Director: {{ movie!.director.fullname }}</p>
-</div>
