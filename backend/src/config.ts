@@ -1,6 +1,9 @@
 export const config = () => ({
   port: process.env.PORT || 3000,
   clientUrl: process.env.CLIENTURL,
+  jwt: {
+    secret: process.env.secret,
+  },
   database: {
     host: process.env.DATABASE_HOST || 'localhost',
     port: +process.env.DATABASE_PORT || 5432,

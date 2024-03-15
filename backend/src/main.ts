@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('Mouvy')
     .setDescription('Open movie data')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

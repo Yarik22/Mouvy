@@ -4,7 +4,10 @@ import { config } from './config';
 import { DatabaseModule } from './database/database.module';
 import { MovieModule } from './movie/movie.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Movie } from './movie/entities/movie.entity';
+import { DirectorModule } from './director/director.module';
+import { StarModule } from './star/star.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +31,10 @@ import { Movie } from './movie/entities/movie.entity';
     }),
     MovieModule,
     DatabaseModule,
+    DirectorModule,
+    StarModule,
+    AuthModule,
+    UserModule,
   ],
 })
 export class AppModule {}
