@@ -11,12 +11,16 @@ import { Observable, from, of, throwError } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/entities/user.entity';
+import { MailService } from 'src/mail/mail.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
+    private readonly configService: ConfigService,
   ) {}
 
   validateUser(authPayload: AuthPayloadDto): Observable<User> {
@@ -25,7 +29,9 @@ export class AuthService {
         if (!user) {
           throw new UnauthorizedException('User not found');
         }
-        return from(bcrypt.compare(authPayload.password, user.hashedPassword)).pipe(
+        return from(
+          bcrypt.compare(authPayload.password, user.hashedPassword),
+        ).pipe(
           switchMap((passwordEquals: boolean) => {
             if (passwordEquals) {
               return of(user);
@@ -41,7 +47,7 @@ export class AuthService {
 
   login(authPayload: AuthPayloadDto): Observable<string> {
     return this.validateUser(authPayload).pipe(
-      switchMap((user: User) => this.generateToken(user,)),
+      switchMap((user: User) => this.generateToken(user)),
     );
   }
 
@@ -60,20 +66,24 @@ export class AuthService {
               hashedPassword,
             }),
           ),
-          switchMap((user: User) => this.generateToken(user)),
+          switchMap((user: User) => {
+            const activationLink = `${this.configService.get('apiUrl')}/user/${user.id}/activate`;
+            this.mailService.sendActivationMail(user.email, activationLink);
+            return this.generateToken(user);
+          }),
           catchError((error) => throwError(error)),
         );
       }),
     );
   }
 
-  private generateToken(
-    user: User,
-  ): Observable<string> {
+  private generateToken(user: User): Observable<string> {
     const payload = {
       email: user.email,
       id: user.id,
       roles: user.roles,
+      isActivated: user.isActivated,
+      isBanned: user.isBanned,
     };
     return from(this.jwtService.signAsync(payload));
   }

@@ -8,6 +8,7 @@ import { DirectorModule } from './director/director.module';
 import { StarModule } from './star/star.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { MailModule } from './mail/mail.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +36,7 @@ import { UserModule } from './user/user.module';
     StarModule,
     AuthModule,
     UserModule,
+    MailModule,
   ],
 })
 export class AppModule {}

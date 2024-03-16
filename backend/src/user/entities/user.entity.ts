@@ -12,30 +12,31 @@ export enum RoleName {
 @Entity()
 export class User extends BaseEntity {
   @ApiProperty({ example: 'john_doe' })
-  @Column()
+  @Column({    nullable: false,})
   username: string;
 
   @ApiProperty({ example: 'john@example.com' })
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   email: string;
 
   @ApiProperty({ example: 'hashedPassword' })
-  @Column()
+  @Column({ nullable: false })
   hashedPassword: string;
 
   @ApiProperty({ example: false })
-  @Column({ default: false })
+  @Column({ default: false, nullable: false })
   isActivated: boolean;
 
   @ApiProperty({ example: false })
-  @Column({ default: false })
+  @Column({ default: false, nullable: false })
   isBanned: boolean;
 
   @Column({
     type: 'enum',
     enum: RoleName,
     array: true,
-    default: [RoleName.USER]
+    default: [RoleName.USER],
+    nullable: false,
   })
   @ApiProperty({
     enum: RoleName,
