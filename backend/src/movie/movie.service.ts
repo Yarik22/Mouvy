@@ -1,11 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Movie } from './entities/movie.entity';
+import { Genre, Movie, PEGI } from './entities/movie.entity';
 import { DatabaseService } from 'src/database/database.service';
 import { DirectorService } from 'src/director/director.service';
-import { Observable, switchMap } from 'rxjs';
+import {
+  Observable,
+  from,
+  map,
+  switchMap,
+} from 'rxjs';
 import { StarService } from 'src/star/star.service';
+
+type FilteredMoviesResponse = {
+  movies: Movie[];
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+};
 
 @Injectable()
 export class MovieService extends DatabaseService<Movie> {
@@ -16,6 +28,48 @@ export class MovieService extends DatabaseService<Movie> {
     private readonly starService: StarService, // Import ActorService if not already imported
   ) {
     super(repository);
+  }
+
+  filter(
+    page: number,
+    limit: number,
+    genres: Genre[],
+    pegi: PEGI[],
+    rating: number,
+  ): Observable<FilteredMoviesResponse> {
+    const queryBuilder = this.repository.createQueryBuilder('movie');
+    if (genres && genres.length > 0) {
+      queryBuilder.andWhere(
+        'EXISTS (SELECT 1 FROM UNNEST(movie.genres) g WHERE g = ANY(:genres))',
+        { genres },
+      );
+    }
+
+    if (pegi && pegi.length > 0) {
+      queryBuilder.andWhere('movie.pegi IN (:...pegi)', { pegi });
+    }
+
+    if (rating) {
+      queryBuilder.andWhere('movie.rating >= :rating', { rating });
+    }
+
+    // Pagination
+    return from(
+      queryBuilder
+        .take(limit)
+        .skip((page - 1) * limit)
+        .getManyAndCount(),
+    ).pipe(
+      map(([movies, totalCount]) => {
+        const totalPages = Math.ceil(totalCount / limit);
+        return {
+          movies,
+          currentPage: page,
+          totalPages,
+          totalCount,
+        };
+      }),
+    );
   }
 
   addDirectorToMovie(

@@ -4,6 +4,7 @@ import { Movie } from 'src/movie/entities/movie.entity';
 import { BaseEntity } from 'src/database/entities/baseEntity.entity';
 
 export enum RoleName {
+  SUDO = 'sudo',
   ADMIN = 'admin',
   USER = 'user',
   MODERATOR = 'moderator',
@@ -12,7 +13,7 @@ export enum RoleName {
 @Entity()
 export class User extends BaseEntity {
   @ApiProperty({ example: 'john_doe' })
-  @Column({    nullable: false,})
+  @Column({ nullable: false })
   username: string;
 
   @ApiProperty({ example: 'john@example.com' })

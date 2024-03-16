@@ -18,7 +18,6 @@ import { MailModule } from 'src/mail/mail.module';
     }),
     forwardRef(() => UserModule),
     ConfigModule,
-    AuthModule,
     MailModule
   ],
   controllers: [AuthController],

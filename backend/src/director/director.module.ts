@@ -7,7 +7,7 @@ import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [DirectorController],
-  exports: [DirectorService, TypeOrmModule],
+  exports: [DirectorService],
   providers: [DirectorService],
   imports: [TypeOrmModule.forFeature([Director]), AuthModule],
 })

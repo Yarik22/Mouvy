@@ -9,6 +9,6 @@ import { AuthModule } from 'src/auth/auth.module';
   controllers: [StarController],
   providers: [StarService],
   imports: [TypeOrmModule.forFeature([Star]), AuthModule],
-  exports: [StarService, TypeOrmModule],
+  exports: [StarService],
 })
 export class StarModule {}

@@ -45,14 +45,4 @@ export abstract class DatabaseService<T extends BaseEntity> {
   delete(id: string): Observable<DeleteResult> {
     return defer(() => this.repository.delete(id));
   }
-
-  paginate(page: number, limit: number): Observable<[T[], number]> {
-    const offset = (page - 1) * limit;
-    return defer(() =>
-      this.repository.findAndCount({
-        take: limit,
-        skip: offset,
-      }),
-    );
-  }
 }

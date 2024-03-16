@@ -8,9 +8,10 @@ import {
   Put,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
-import { Movie } from './entities/movie.entity';
+import { Genre, Movie, PEGI } from './entities/movie.entity';
 import {
   AddDirectorDto,
   AddStarsDto,
@@ -23,6 +24,7 @@ import {
   ApiParam,
   ApiBody,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -33,14 +35,23 @@ import { RoleName } from 'src/user/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard,RoleGuard)
+@UseGuards(AuthGuard, RoleGuard)
 @ApiTags('movies')
 @Controller('movies')
 export class MovieController {
-  constructor(
-    private readonly movieService: MovieService,
-  ) {}
-  @Role(RoleName.MODERATOR,RoleName.ADMIN,RoleName.USER)
+  constructor(private readonly movieService: MovieService) {}
+
+  convertToArray<T>(value: T | T[]): T[] {
+    if (!value) {
+      return undefined;
+    }
+    if (!Array.isArray(value)) {
+      return [value] as T[];
+    }
+    return value;
+  }
+
+  @Role(RoleName.MODERATOR, RoleName.ADMIN, RoleName.USER)
   @Get()
   @ApiResponse({
     status: 200,
@@ -48,11 +59,41 @@ export class MovieController {
     type: Movie,
     isArray: true,
   })
-  findAll(): Observable<Movie[]> {
-    return this.movieService.findAll();
+  @ApiQuery({ name: 'page', required: true, type: Number })
+  @ApiQuery({ name: 'limit', required: true, type: Number })
+  @ApiQuery({
+    name: 'genres',
+    required: false,
+    type: String,
+    isArray: true,
+    example: [Genre.ACTION, Genre.DRAMA],
+  })
+  @ApiQuery({
+    name: 'pegi',
+    required: false,
+    type: Number,
+    isArray: true,
+    example: [PEGI.EIGHTEEN, PEGI.SIXTEEN],
+  })
+  @ApiQuery({
+    name: 'rating',
+    required: false,
+    type: Number,
+    description: 'minimum rating',
+  })
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('genres') genres: Genre[],
+    @Query('pegi') pegi: PEGI[],
+    @Query('rating') rating: number,
+  ) {
+    const genresVal = this.convertToArray(genres);
+    const pegiVal = this.convertToArray(pegi);
+    return this.movieService.filter(page, limit, genresVal, pegiVal, rating);
   }
 
-  @Role(RoleName.MODERATOR,RoleName.ADMIN,RoleName.USER)
+  @Role(RoleName.MODERATOR, RoleName.ADMIN, RoleName.USER)
   @Get(':id')
   @ApiParam({ name: 'id', description: 'Movie ID' })
   @ApiResponse({
@@ -76,7 +117,7 @@ export class MovieController {
     return this.movieService.create(createMovieDto);
   }
 
-  @Role(RoleName.MODERATOR,RoleName.ADMIN)
+  @Role(RoleName.MODERATOR, RoleName.ADMIN)
   @Put(':id')
   @ApiParam({ name: 'id', description: 'Movie ID' })
   @ApiBody({ type: UpdateMovieDto, description: 'Updated movie details' })
@@ -102,7 +143,7 @@ export class MovieController {
     return this.movieService.delete(id);
   }
 
-  @Role(RoleName.MODERATOR,RoleName.ADMIN)
+  @Role(RoleName.MODERATOR, RoleName.ADMIN)
   @Post(':movieId/director')
   @ApiParam({ name: 'movieId', description: 'Movie ID' })
   @ApiBody({ type: AddDirectorDto, description: 'Director ID' })
@@ -117,7 +158,7 @@ export class MovieController {
     return this.movieService.addDirectorToMovie(movieId, directorId);
   }
 
-  @Role(RoleName.MODERATOR,RoleName.ADMIN)
+  @Role(RoleName.MODERATOR, RoleName.ADMIN)
   @Post(':movieId/stars')
   @ApiBody({ type: AddStarsDto, description: 'Stars ID' })
   @ApiResponse({
