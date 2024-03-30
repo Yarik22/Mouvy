@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -70,7 +71,7 @@ export class UserController {
   @ApiBearerAuth()
   @Role(RoleName.MODERATOR, RoleName.ADMIN, RoleName.USER)
   @UseGuards(AuthGuard, RoleGuard)
-  @Post(':id/delete-from-favourite/:movieId')
+  @Delete(':id/delete-from-favourite/:movieId')
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiParam({ name: 'movieId', description: 'Movie ID' })
   @ApiResponse({

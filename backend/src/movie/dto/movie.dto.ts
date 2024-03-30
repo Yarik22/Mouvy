@@ -9,6 +9,8 @@ import {
   IsOptional,
   IsBoolean,
   IsArray,
+  IsISO8601,
+  IsNumber,
 } from 'class-validator';
 import { Genre, PEGI } from '../entities/movie.entity';
 
@@ -55,11 +57,11 @@ export class CreateMovieDto {
   rating: number;
 
   @ApiProperty({
-    description: 'The genres of the movie.',
+    description: 'The PEGI rating of the movie.',
     example: PEGI.EIGHTEEN,
   })
   @IsNotEmpty()
-  @IsEnum(PEGI, { each: true })
+  @IsEnum(PEGI)
   pegi: PEGI;
 
   @ApiProperty({ description: 'The image URL of the movie.', example: 'url' })
@@ -71,6 +73,23 @@ export class CreateMovieDto {
   @IsOptional()
   @IsBoolean()
   hasOscar: boolean;
+
+  @ApiProperty({
+    description: 'The duration of the movie in ISO 8601 format (HH:MM:SS).',
+    example: '02:15:30',
+  })
+  @IsNotEmpty()
+  @IsString()
+  @IsISO8601()
+  duration: string;
+
+  @ApiProperty({
+    description: 'The release year of the movie.',
+    example: 2022,
+  })
+  @IsOptional()
+  @IsNumber()
+  year?: number;
 }
 
 export class AddDirectorDto {

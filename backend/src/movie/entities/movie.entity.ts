@@ -1,4 +1,3 @@
-// movie.entity.ts
 import {
   Entity,
   Column,
@@ -17,18 +16,27 @@ export enum Genre {
   ACTION = 'Action',
   DRAMA = 'Drama',
   COMEDY = 'Comedy',
+  HORROR = 'Horror',
+  ROMANCE = 'Romance',
+  SCIENCE_FICTION = 'Science Fiction',
+  THRILLER = 'Thriller',
+  FANTASY = 'Fantasy',
+  ADVENTURE = 'Adventure',
+  ANIMATION = 'Animation',
+  DOCUMENTARY = 'Documentary',
+  SCIFI = 'Sci-Fi',
 }
 
 export enum PEGI {
   THREE = 3,
   SEVEN = 7,
   TWELVE = 12,
+  THIRTEEN = 13,
   SIXTEEN = 16,
   EIGHTEEN = 18,
 }
 
 @Entity()
-@Check('"rating" >= 0 and rating <= 100')
 export class Movie extends BaseEntity {
   @Column({ unique: true })
   @ApiProperty({ description: 'The title of the movie.' })
@@ -58,6 +66,7 @@ export class Movie extends BaseEntity {
   description: string;
 
   @Column({ type: 'int' })
+  @Check('"rating" >= 0 and rating <= 100')
   @ApiProperty({ description: 'The rating of the movie (0 to 100).' })
   rating: number;
 
@@ -68,6 +77,21 @@ export class Movie extends BaseEntity {
     default: 18,
   })
   pegi: number;
+
+  @Column({ type: 'time', nullable: true })
+  @ApiProperty({
+    description: 'The duration of the movie in time (HH:MM:SS).',
+    nullable: true,
+  })
+  @Check("duration >= '00:00:00' AND duration <= '24:00:00'")
+  duration: string;
+
+  @Column({ nullable: true })
+  @ApiProperty({
+    description: 'The release year of the movie.',
+    nullable: true,
+  })
+  year: number;
 
   @Column()
   @ApiProperty({ description: 'The image URL of the movie.' })
