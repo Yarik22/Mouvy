@@ -15,6 +15,7 @@ import { User } from 'src/user/entities/user.entity';
 export enum Genre {
   ACTION = 'Action',
   DRAMA = 'Drama',
+  CRIME = 'Crime',
   COMEDY = 'Comedy',
   HORROR = 'Horror',
   ROMANCE = 'Romance',
