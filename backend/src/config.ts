@@ -3,7 +3,7 @@ export const config = () => ({
   clientUrl: process.env.CLIENTURL,
   apiUrl: process.env.APIURL,
   jwt: {
-    secret: process.env.secret,
+    secret: process.env.SECRET,
   },
   database: {
     host: process.env.DATABASE_HOST || 'localhost',

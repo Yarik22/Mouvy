@@ -9,8 +9,11 @@ import { StarModule } from './star/star.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { MailModule } from './mail/mail.module';
+import { DefaultAdminModule } from 'nestjs-admin';
+
 @Module({
   imports: [
+    DefaultAdminModule,
     ConfigModule.forRoot({
       load: [config],
       isGlobal: true,
@@ -25,7 +28,6 @@ import { MailModule } from './mail/mail.module';
         username: configService.get<string>('database.user'),
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.database'),
-        // entities: [__dirname + './**/*.entity{.ts,.js}'],
         autoLoadEntities: true,
         synchronize: true,
       }),

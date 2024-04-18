@@ -17,7 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm:migrate": "npx typeorm migration:run -d data-source.ts -o ./src/migration",
+    "typeorm:generate": "npx typeorm migration:generate -d data-source.ts -o ./src/migration"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.3",
@@ -30,8 +32,8 @@
     "@nestjs/typeorm": "^10.0.2",
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
+    "nestjs-admin": "^0.4.1",
     "nodemailer": "^6.9.12",
-    "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
@@ -47,6 +49,7 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@types/nodemailer": "^6.4.14",
+    "@types/passport-jwt": "^4.0.1",
     "@types/pg": "^8.11.2",
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

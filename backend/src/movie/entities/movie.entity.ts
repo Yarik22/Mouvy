@@ -39,6 +39,7 @@ export enum PEGI {
 
 @Entity()
 export class Movie extends BaseEntity {
+
   @Column({ unique: true })
   @ApiProperty({ description: 'The title of the movie.' })
   title: string;
