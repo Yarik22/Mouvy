@@ -4,11 +4,14 @@ import { DirectorController } from './director.controller';
 import { Director } from './entities/director.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-
 @Module({
   controllers: [DirectorController],
   exports: [DirectorService],
   providers: [DirectorService],
-  imports: [TypeOrmModule.forFeature([Director]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Director]),
+    AuthModule,
+  ],
 })
-export class DirectorModule {}
+export class DirectorModule {
+}

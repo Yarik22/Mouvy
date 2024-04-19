@@ -16,4 +16,5 @@ import { MovieModule } from 'src/movie/movie.module';
   exports: [UserService],
   controllers: [UserController],
 })
-export class UserModule {}
+export class UserModule {
+}

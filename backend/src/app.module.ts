@@ -9,11 +9,8 @@ import { StarModule } from './star/star.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { MailModule } from './mail/mail.module';
-import { DefaultAdminModule } from 'nestjs-admin';
-
 @Module({
   imports: [
-    DefaultAdminModule,
     ConfigModule.forRoot({
       load: [config],
       isGlobal: true,
@@ -29,7 +26,7 @@ import { DefaultAdminModule } from 'nestjs-admin';
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.database'),
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: false,
       }),
     }),
     MovieModule,
@@ -41,4 +38,7 @@ import { DefaultAdminModule } from 'nestjs-admin';
     MailModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private configService: ConfigService) {
+  }
+}

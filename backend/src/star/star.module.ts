@@ -11,4 +11,5 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [TypeOrmModule.forFeature([Star]), AuthModule],
   exports: [StarService],
 })
-export class StarModule {}
+export class StarModule {
+}

@@ -18,4 +18,5 @@ import { AuthModule } from 'src/auth/auth.module';
   ],
   exports: [MovieService],
 })
-export class MovieModule {}
+export class MovieModule {
+}
