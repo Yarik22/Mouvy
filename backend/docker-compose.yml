@@ -1,4 +1,4 @@
-version: '3'
+version: '1.0.0'
 services:
   postgres:
     image: postgres:latest
@@ -21,6 +21,9 @@ services:
       - docker.env
 
   nestjs-api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     image: nestjs-api
     env_file:
       - docker.env
