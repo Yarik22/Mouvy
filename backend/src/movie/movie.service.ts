@@ -25,10 +25,11 @@ export class MovieService extends DatabaseService<Movie> {
     @InjectRepository(Movie)
     protected readonly repository: Repository<Movie>,
     private readonly directorService: DirectorService,
-    private readonly starService: StarService, // Import ActorService if not already imported
+    private readonly starService: StarService,
   ) {
     super(repository);
   }
+
 
   filter(
     page: number,

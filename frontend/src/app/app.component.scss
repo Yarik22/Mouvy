@@ -1,13 +1,26 @@
-/* app.component.scss */
-
 .app-container {
+  font-size: 3vh;
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
+a[mat-list-item]{
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.title {
+  margin-left: 15px;
+}
+.mat-nav-list {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 20px;
+}
+
 .header {
-  flex-shrink: 0; /* Prevent header from shrinking */
+  flex-shrink: 0;
 }
 
 .sidenav-container {
@@ -15,14 +28,8 @@
   display: flex;
 }
 
-.main-content {
-  padding: 20px 0;
-  overflow: auto;
-  height: calc(100vh - 64px); /* Adjust for header height */
-}
-
 .footer {
-  flex-shrink: 0; /* Prevent footer from shrinking */
+  flex-shrink: 0;
   padding: 20px;
   background-color: #333;
   color: #fff;

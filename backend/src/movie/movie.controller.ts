@@ -9,6 +9,9 @@ import {
   Delete,
   UseGuards,
   Query,
+  UseInterceptors,
+  UploadedFile,
+  NotAcceptableException,
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { Genre, Movie, PEGI } from './entities/movie.entity';
@@ -25,6 +28,7 @@ import {
   ApiBody,
   ApiBearerAuth,
   ApiQuery,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -32,7 +36,8 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { RoleGuard } from 'src/auth/role.guard';
 import { Role } from 'src/auth/role.decorator';
 import { RoleName } from 'src/user/entities/user.entity';
-import { ConfigService } from '@nestjs/config';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { createReadStream } from 'fs';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RoleGuard)
@@ -41,14 +46,21 @@ import { ConfigService } from '@nestjs/config';
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  convertToArray<T>(value: T | T[]): T[] {
+  convertToArray<T>(value: T | T[] | string): T[] {
     if (!value) {
-      return undefined;
+      return [];
     }
+
+    if (typeof value === 'string') {
+      const arrayValue = value.split(',').map((item) => item.trim()) as T[];
+      return arrayValue;
+    }
+
     if (!Array.isArray(value)) {
-      return [value] as T[];
+      return [value];
     }
-    return value;
+
+    return value.filter((item) => item !== undefined) as T[];
   }
 
   @Role(RoleName.MODERATOR, RoleName.ADMIN, RoleName.USER)
@@ -113,7 +125,20 @@ export class MovieController {
     description: 'Creates a new movie.',
     type: Movie,
   })
-  create(@Body() createMovieDto: CreateMovieDto): Observable<Movie> {
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createMovieDto: CreateMovieDto,
+  ): Observable<Movie> {
+    createMovieDto.image = Buffer.from(file.buffer);
+    if (createMovieDto.image.length > 256 * 1024) {
+      throw new NotAcceptableException(
+        'Image size exceeds the maximum allowed size',
+      );
+    }
+    const genres = this.convertToArray<Genre>(createMovieDto.genres);
+    createMovieDto.genres = genres;
     return this.movieService.create(createMovieDto);
   }
 
@@ -125,10 +150,21 @@ export class MovieController {
     status: 200,
     description: 'Updates the movie with the specified ID.',
   })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
     @Body() updateMovieDto: UpdateMovieDto,
   ): Observable<UpdateResult> {
+    updateMovieDto.image = Buffer.from(file.buffer);
+    if (updateMovieDto.image.length > 256 * 1024) {
+      throw new NotAcceptableException(
+        'Image size exceeds the maximum allowed size',
+      );
+    }
+    const genres = this.convertToArray<Genre>(updateMovieDto.genres);
+    updateMovieDto.genres = genres;
     return this.movieService.update(id, updateMovieDto);
   }
 

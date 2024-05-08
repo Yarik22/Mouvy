@@ -39,7 +39,6 @@ export enum PEGI {
 
 @Entity()
 export class Movie extends BaseEntity {
-
   @Column({ unique: true })
   @ApiProperty({ description: 'The title of the movie.' })
   title: string;
@@ -78,7 +77,7 @@ export class Movie extends BaseEntity {
     description: 'The PEGI rating of the movie.',
     default: 18,
   })
-  pegi: number;
+  pegi: PEGI;
 
   @Column({ type: 'time', nullable: true })
   @ApiProperty({
@@ -95,9 +94,9 @@ export class Movie extends BaseEntity {
   })
   year: number;
 
-  @Column()
+  @Column({ type: 'bytea', nullable: true })
   @ApiProperty({ description: 'The image URL of the movie.' })
-  image: string;
+  image: Buffer;
 
   @Column({ default: false })
   @ApiProperty({ description: 'Indicates if the movie has won an Oscar.' })
@@ -118,4 +117,5 @@ export class Movie extends BaseEntity {
     inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
   })
   users: User[];
+  
 }

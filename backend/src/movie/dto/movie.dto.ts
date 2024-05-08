@@ -1,4 +1,4 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsEnum,
@@ -36,7 +36,6 @@ export class CreateMovieDto {
     example: [Genre.ACTION, Genre.COMEDY],
   })
   @IsNotEmpty()
-  @IsEnum(Genre, { each: true })
   genres: Genre[];
 
   @ApiProperty({
@@ -64,10 +63,12 @@ export class CreateMovieDto {
   @IsEnum(PEGI)
   pegi: PEGI;
 
-  @ApiProperty({ description: 'The image URL of the movie.', example: 'url' })
-  @IsNotEmpty()
-  @IsString()
-  image: string;
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Image file (JPG, PNG)',
+  })
+  image: any;
 
   @ApiProperty({ description: 'Whether the movie has won an Oscar.' })
   @IsOptional()
@@ -104,5 +105,4 @@ export class AddStarsDto {
   @IsString({ each: true })
   readonly starsIds: string[] | null;
 }
-
-export class UpdateMovieDto extends PartialType(CreateMovieDto) {}
+export class UpdateMovieDto extends OmitType(CreateMovieDto, ['directorId']) {}
