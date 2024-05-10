@@ -82,7 +82,7 @@ export class MockService {
         description: movieData.description,
         rating: movieData.rating,
         pegi: movieData.pegi,
-        image: movieData.image,
+        imageUrl: movieData.imageUrl,
         hasOscar: movieData.hasOscar,
         duration: movieData.duration,
         year: movieData.year,

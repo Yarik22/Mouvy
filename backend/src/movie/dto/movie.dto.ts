@@ -63,12 +63,10 @@ export class CreateMovieDto {
   @IsEnum(PEGI)
   pegi: PEGI;
 
-  @ApiProperty({
-    type: 'string',
-    format: 'binary',
-    description: 'Image file (JPG, PNG)',
-  })
-  image: any;
+  @ApiProperty({ description: 'The image URL of the movie.', example: 'url' })
+  @IsNotEmpty()
+  @IsString()
+  imageUrl: string;
 
   @ApiProperty({ description: 'Whether the movie has won an Oscar.' })
   @IsOptional()

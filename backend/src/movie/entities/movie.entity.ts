@@ -94,9 +94,9 @@ export class Movie extends BaseEntity {
   })
   year: number;
 
-  @Column({ type: 'bytea', nullable: true })
+  @Column()
   @ApiProperty({ description: 'The image URL of the movie.' })
-  image: Buffer;
+  imageUrl: string;
 
   @Column({ default: false })
   @ApiProperty({ description: 'Indicates if the movie has won an Oscar.' })
@@ -117,5 +117,4 @@ export class Movie extends BaseEntity {
     inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
   })
   users: User[];
-  
 }
