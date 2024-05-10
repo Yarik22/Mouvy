@@ -15,7 +15,7 @@ export class Star extends BaseEntity {
   })
   hasOscar: boolean;
 
-  @ManyToMany(() => Movie, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  @ManyToMany(() => Movie, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinTable({
     name: 'movie_star',
     joinColumn: { name: 'star_id', referencedColumnName: 'id' },

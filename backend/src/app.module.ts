@@ -9,6 +9,7 @@ import { StarModule } from './star/star.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { MailModule } from './mail/mail.module';
+import { MockModule } from './mock/mock.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,6 +37,7 @@ import { MailModule } from './mail/mail.module';
     AuthModule,
     UserModule,
     MailModule,
+    MockModule,
   ],
 })
 export class AppModule {

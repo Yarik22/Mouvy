@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Mig1715168672716 implements MigrationInterface {
-    name = 'Mig1715168672716'
+export class Mig1715346464381 implements MigrationInterface {
+    name = 'Mig1715273865183'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "star" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "fullname" character varying NOT NULL, "hasOscar" boolean NOT NULL DEFAULT false, CONSTRAINT "UQ_776e4e36c65e3bd4f0aa5317c5f" UNIQUE ("fullname"), CONSTRAINT "PK_e0a31656542918b9e028c3b9f5f" PRIMARY KEY ("id"))`);
@@ -18,7 +18,7 @@ export class Mig1715168672716 implements MigrationInterface {
         await queryRunner.query(`CREATE INDEX "IDX_e105ca9647960a4b71fdf35989" ON "user_favourite_movie" ("user_id") `);
         await queryRunner.query(`CREATE INDEX "IDX_7e3eb59020a773b22b8790c5c9" ON "user_favourite_movie" ("movie_id") `);
         await queryRunner.query(`ALTER TABLE "movie" ADD CONSTRAINT "FK_a32a80a88aff67851cf5b75d1cb" FOREIGN KEY ("directorId") REFERENCES "director"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
-        await queryRunner.query(`ALTER TABLE "movie_star" ADD CONSTRAINT "FK_1837cc2c58de268861093ccf48b" FOREIGN KEY ("star_id") REFERENCES "star"("id") ON DELETE SET NULL ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "movie_star" ADD CONSTRAINT "FK_1837cc2c58de268861093ccf48b" FOREIGN KEY ("star_id") REFERENCES "star"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
         await queryRunner.query(`ALTER TABLE "movie_star" ADD CONSTRAINT "FK_d10b520eed560658628d9b38526" FOREIGN KEY ("movie_id") REFERENCES "movie"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
         await queryRunner.query(`ALTER TABLE "user_favourite_movie" ADD CONSTRAINT "FK_e105ca9647960a4b71fdf359894" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
         await queryRunner.query(`ALTER TABLE "user_favourite_movie" ADD CONSTRAINT "FK_7e3eb59020a773b22b8790c5c94" FOREIGN KEY ("movie_id") REFERENCES "movie"("id") ON DELETE CASCADE ON UPDATE CASCADE`);

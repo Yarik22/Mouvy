@@ -29,7 +29,7 @@ export class CreateMovieDto {
   })
   @IsOptional()
   @IsString()
-  directorId: string;
+  directorId?: string;
 
   @ApiProperty({
     description: 'The genres of the movie.',
