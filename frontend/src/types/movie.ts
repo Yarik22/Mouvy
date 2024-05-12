@@ -30,15 +30,22 @@ export enum Genre {
 
 export type Movie = {
   title: string;
-  director: Director;
+  director?: Director;
   genres: Genre[];
   description: string;
   rating: number;
-  pegi: number;
+  pegi: PEGI;
   duration: string;
   year: number;
-  image: string;
+  imageUrl: string;
   hasOscar: boolean;
-  stars: Star[];
-  users: User[];
+  stars?: Star[];
+  users?: User[];
 } & Base;
+
+export type PaginatedMovies = {
+  movies: Movie[];
+  currentPage: string;
+  totalPages: number;
+  totalCount: number;
+};

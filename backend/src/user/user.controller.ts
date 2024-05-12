@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -16,23 +17,32 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { UpdateResult } from 'typeorm';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RoleGuard } from 'src/auth/role.guard';
 import { Role } from 'src/auth/role.decorator';
 import { RoleName, User } from './entities/user.entity';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
+  ) {}
   @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User activated successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @Get(':id/activate')
-  activateUser(@Param('id') id: string): Observable<UpdateResult> {
-    return this.userService.activateUser(id);
+  activateUser(@Param('id') id: string, @Res() res: Response): Observable<any> {
+    return this.userService.activateUser(id).pipe(
+      map(() => {
+        res.redirect(`${this.configService.get('clientUrl')}/login`);
+      }),
+    );
   }
 
   @ApiBearerAuth()

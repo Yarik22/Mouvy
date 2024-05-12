@@ -1,0 +1,43 @@
+<div class="search-container">
+  <h2>Movie Search</h2>
+  <div class="form">
+    <div class="checkbox-group">
+      <div *ngFor="let genre of genres">
+        <mat-checkbox
+          [checked]="selectedGenres.includes(genre)"
+          (change)="toggleGenreSelection(genre)"
+        >
+          {{ genre }}
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="checkbox-group">
+      <div *ngFor="let pegi of pegis">
+        <mat-checkbox
+          [checked]="selectedPegis.includes(pegi)"
+          (change)="togglePegiSelection(pegi)"
+        >
+          {{ pegi }}
+        </mat-checkbox>
+      </div>
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Minimum Rating</mat-label>
+      <input
+        min="0"
+        max="100"
+        matInput
+        type="number"
+        [(ngModel)]="minRating"
+        placeholder="Enter minimum rating"
+      />
+    </mat-form-field>
+  </div>
+  <button mat-raised-button color="primary" type="submit" (click)="onSearch()">
+    Search
+  </button>
+</div>
+<div class="movie">
+  <img class="image"[src]="movies[0].imageUrl" [alt]="movies[0].title">
+  <div class="title">{{movies[0].title}}</div>
+</div>

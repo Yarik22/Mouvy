@@ -18,8 +18,4 @@ export const config = () => ({
     user: process.env.SMTP_USER,
     password: process.env.SMTP_PASSWORD,
   },
-  pg: {
-    user: process.env.PGADMIN_DEFAULT_EMAIL,
-    password: process.env.PGADMIN_DEFAULT_PASSWORD,
-  },
 });
