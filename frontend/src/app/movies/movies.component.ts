@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { _isNumberValue } from '@angular/cdk/coercion';
+import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-movies',
   standalone: true,
@@ -22,13 +23,14 @@ import { _isNumberValue } from '@angular/cdk/coercion';
     MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIcon,
   ],
   templateUrl: './movies.component.html',
   styleUrl: './movies.component.scss',
 })
 export class MoviesComponent implements OnInit {
   constructor(private readonly dataService: DataService) {}
-  movies: Movie[] = [];
+  paginatedMovies!: PaginatedMovies;
   page = 1;
   limit = 1;
   ngOnInit(): void {
@@ -43,15 +45,25 @@ export class MoviesComponent implements OnInit {
   selectedPegis: PEGI[] = [];
   minRating: number = 0;
 
-  @Output() searchClicked = new EventEmitter<any>();
-
   onSearch(): void {
-    const searchCriteria = {
-      genres: this.selectedGenres,
-      pegis: this.selectedPegis,
-      minRating: this.minRating,
-    };
-    this.searchClicked.emit(searchCriteria);
+    this.page = 1;
+    this.dataService
+      .getMovies(
+        this.page,
+        this.limit,
+        this.selectedGenres,
+        this.selectedPegis,
+        this.minRating
+      )
+      .subscribe(
+        (paginatedMovies: PaginatedMovies) => {
+          this.paginatedMovies = paginatedMovies;
+          console.log('Fetched 3 movies:', this.paginatedMovies);
+        },
+        (error) => {
+          console.error('Error fetching movies:', error);
+        }
+      );
   }
 
   toggleGenreSelection(genre: Genre): void {
@@ -83,8 +95,52 @@ export class MoviesComponent implements OnInit {
       )
       .subscribe(
         (paginatedMovies: PaginatedMovies) => {
-          this.movies = paginatedMovies.movies;
-          console.log('Fetched 3 movies:', this.movies);
+          this.paginatedMovies = paginatedMovies;
+          console.log('Fetched 3 movies:', this.paginatedMovies);
+        },
+        (error) => {
+          console.error('Error fetching movies:', error);
+        }
+      );
+  }
+
+  nextPage(): void {
+    if (this.page === this.paginatedMovies.totalPages) return;
+    this.page += 1;
+    this.dataService
+      .getMovies(
+        this.page,
+        this.limit,
+        this.selectedGenres,
+        this.selectedPegis,
+        this.minRating
+      )
+      .subscribe(
+        (paginatedMovies: PaginatedMovies) => {
+          this.paginatedMovies = paginatedMovies;
+          console.log('Fetched 3 movies:', this.paginatedMovies);
+        },
+        (error) => {
+          console.error('Error fetching movies:', error);
+        }
+      );
+  }
+
+  backPage(): void {
+    if (this.page === 1) return;
+    this.page -= 1;
+    this.dataService
+      .getMovies(
+        this.page,
+        this.limit,
+        this.selectedGenres,
+        this.selectedPegis,
+        this.minRating
+      )
+      .subscribe(
+        (paginatedMovies: PaginatedMovies) => {
+          this.paginatedMovies = paginatedMovies;
+          console.log('Fetched 3 movies:', this.paginatedMovies);
         },
         (error) => {
           console.error('Error fetching movies:', error);

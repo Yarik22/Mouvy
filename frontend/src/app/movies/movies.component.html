@@ -37,7 +37,50 @@
     Search
   </button>
 </div>
-<div class="movie">
-  <img class="image"[src]="movies[0].imageUrl" [alt]="movies[0].title">
-  <div class="title">{{movies[0].title}}</div>
-</div>
+<ng-container *ngIf="paginatedMovies && paginatedMovies.movies.length > 0">
+  <div class="movie-card">
+    <div class="image-container">
+      <img
+        class="image"
+        [src]="paginatedMovies.movies[0].imageUrl"
+        [alt]="paginatedMovies.movies[0].title"
+      />
+      <h3 class="title">{{ paginatedMovies.movies[0].title }}</h3>
+      <div class="list">
+        <button (click)="backPage()">
+          <mat-icon [ngClass]="{ gray: page === 1 }"
+            >keyboard_arrow_left</mat-icon
+          >
+        </button>
+        <div class="page">{{page}}/{{paginatedMovies.totalCount}}</div>
+        <button (click)="nextPage()">
+          <mat-icon [ngClass]="{ gray: page === paginatedMovies.totalPages }"
+            >keyboard_arrow_right</mat-icon
+          >
+        </button>
+      </div>
+    </div>
+    <div class="details-container">
+      <div class="info">
+        <p>
+          <strong>Genres:</strong>
+          {{ paginatedMovies.movies[0].genres.join(", ") }}
+        </p>
+        <p>
+          <strong>Description:</strong>
+          {{ paginatedMovies.movies[0].description }}
+        </p>
+        <p><strong>Rating:</strong> {{ paginatedMovies.movies[0].rating }}</p>
+        <p><strong>PEGI:</strong> {{ paginatedMovies.movies[0].pegi }}</p>
+        <p>
+          <strong>Duration:</strong> {{ paginatedMovies.movies[0].duration }}
+        </p>
+        <p><strong>Year:</strong> {{ paginatedMovies.movies[0].year }}</p>
+        <p>
+          <strong>Has Oscar:</strong>
+          {{ paginatedMovies.movies[0].hasOscar ? "Yes" : "No" }}
+        </p>
+      </div>
+    </div>
+  </div>
+</ng-container>

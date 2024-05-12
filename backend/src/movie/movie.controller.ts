@@ -41,16 +41,19 @@ import { ConfigService } from '@nestjs/config';
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  convertToArray<T>(value: T | T[]): T[] {
-    if (!value) {
-      return undefined;
+  convertToArray<T>(input: string, transform?: (value: string) => T): T[] {
+    if (!input || typeof input !== 'string') {
+      return [];
     }
-    if (!Array.isArray(value)) {
-      return [value] as T[];
-    }
-    return value;
-  }
 
+    const arrayValues = input.split(',').map((value) => value.trim());
+
+    if (transform) {
+      return arrayValues.map(transform);
+    }
+
+    return arrayValues as any;
+  }
   @Role(RoleName.MODERATOR, RoleName.ADMIN, RoleName.USER)
   @Get()
   @ApiResponse({
@@ -84,12 +87,12 @@ export class MovieController {
   findAll(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-    @Query('genres') genres: Genre[],
-    @Query('pegi') pegi: PEGI[],
+    @Query('genres') genres: string,
+    @Query('pegi') pegi: string,
     @Query('rating') rating: number,
   ) {
-    const genresVal = this.convertToArray(genres);
-    const pegiVal = this.convertToArray(pegi);
+    const genresVal = this.convertToArray<Genre>(genres);
+    const pegiVal = this.convertToArray<PEGI>(pegi);
     return this.movieService.filter(page, limit, genresVal, pegiVal, rating);
   }
 
