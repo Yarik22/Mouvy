@@ -105,7 +105,7 @@ export class MovieController {
     type: Movie,
   })
   findOne(@Param('id') id: string): Observable<Movie> {
-    return this.movieService.findById(id);
+    return this.movieService.findById(id, ['stars', 'director']);
   }
 
   @Role(RoleName.ADMIN)

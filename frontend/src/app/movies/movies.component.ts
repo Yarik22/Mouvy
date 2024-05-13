@@ -12,6 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { _isNumberValue } from '@angular/cdk/coercion';
 import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-movies',
   standalone: true,
@@ -24,18 +25,19 @@ import { MatIcon } from '@angular/material/icon';
     MatFormFieldModule,
     MatInputModule,
     MatIcon,
+    RouterLink,
   ],
   templateUrl: './movies.component.html',
   styleUrl: './movies.component.scss',
 })
 export class MoviesComponent implements OnInit {
   constructor(private readonly dataService: DataService) {}
-  paginatedMovies!: PaginatedMovies;
-  page = 1;
-  limit = 1;
   ngOnInit(): void {
     this.fetchMovies();
   }
+  paginatedMovies!: PaginatedMovies;
+  page = 1;
+  limit = 1;
   genres = Object.values(Genre);
   pegis = Object.values(PEGI)
     .filter((v) => _isNumberValue(v))
@@ -43,10 +45,14 @@ export class MoviesComponent implements OnInit {
 
   selectedGenres: Genre[] = [];
   selectedPegis: PEGI[] = [];
+  searchedGenres: Genre[] = [];
+  searchedPegis: PEGI[] = [];
   minRating: number = 0;
 
   onSearch(): void {
     this.page = 1;
+    this.searchedGenres = JSON.parse(JSON.stringify(this.selectedGenres));
+    this.searchedPegis = JSON.parse(JSON.stringify(this.selectedPegis));
     this.dataService
       .getMovies(
         this.page,
@@ -111,8 +117,8 @@ export class MoviesComponent implements OnInit {
       .getMovies(
         this.page,
         this.limit,
-        this.selectedGenres,
-        this.selectedPegis,
+        this.searchedGenres,
+        this.searchedPegis,
         this.minRating
       )
       .subscribe(
@@ -133,8 +139,8 @@ export class MoviesComponent implements OnInit {
       .getMovies(
         this.page,
         this.limit,
-        this.selectedGenres,
-        this.selectedPegis,
+        this.searchedGenres,
+        this.searchedPegis,
         this.minRating
       )
       .subscribe(

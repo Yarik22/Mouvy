@@ -20,9 +20,10 @@ export abstract class DatabaseService<T extends BaseEntity> {
     return defer(() => this.repository.find());
   }
 
-  findById(id: string): Observable<T> {
+  findById(id: string, relations?: string[]): Observable<T> {
     const options: FindOneOptions<T> = {
       where: { id: id } as FindOptionsWhere<T>,
+      relations,
     };
     return defer(() => this.repository.findOne(options));
   }
