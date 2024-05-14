@@ -5,9 +5,38 @@
   height: 100vh;
 }
 
-a[mat-list-item]{
-  margin-top: 20px;
-  cursor: pointer;
+.mat-nav-list {
+  background-color: #fff;
+  padding: 0;
+
+  a {
+    margin: 0 0 0 -20px;
+    display: flex;
+    align-items: center;
+    padding: 15px 5px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #f0f0f0;
+      color: #007bff;
+      border-left: 4px solid #007bff;
+    }
+
+    &.active {
+      background-color: #e0e0e0;
+      color: #007bff;
+      border-left: 4px solid #007bff;
+    }
+
+    mat-icon {
+      margin-right: 15px;
+    }
+  }
 }
 
 .title {
@@ -18,11 +47,14 @@ a[mat-list-item]{
   right: 15px;
 }
 
+.main {
+}
+
 .mat-nav-list {
   display: flex;
   flex-direction: column;
   margin: 15px 20px;
-  width: 13vw;
+  width: clamp(20vw, 13vw, 200px);
   max-width: 15vw;
   min-width: 10vw;
 }
@@ -32,6 +64,11 @@ a[mat-list-item]{
 }
 
 .sidenav-container {
+  z-index: 10;
+  background-image: url("https://wallpapergod.com/images/hd/movie-1920X1080-wallpaper-brqi267c1mab09ib.jpeg");
+  background-position: center;
+  background-attachment:fixed;
+  background-size: cover;
   flex: 1;
   width: 100vw;
 }

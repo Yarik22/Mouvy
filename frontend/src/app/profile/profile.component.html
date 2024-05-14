@@ -1,0 +1,55 @@
+<div class="user-info" *ngIf="user">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>User Information</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-divider></mat-divider>
+      <div class="info-item">
+        <span class="label">Username:</span>
+        <span class="value">{{ user.username }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="info-item">
+        <span class="label">Email:</span>
+        <span class="value">{{ user.email }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="info-item">
+        <span class="label">Activated:</span>
+        <span class="value">{{ user.isActivated ? "Yes" : "No" }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="info-item">
+        <span class="label">Banned:</span>
+        <span class="value">{{ user.isBanned ? "Yes" : "No" }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="info-item">
+        <span class="label">Roles:</span>
+        <span class="value">{{ getRolesDisplay(user.roles) }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="info-item">
+        <span class="label">Created At:</span>
+        <span class="value">{{ user.createdAt | date : "medium" }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="info-item">
+        <span class="label">Updated At:</span>
+        <span class="value">{{ user.updatedAt | date : "medium" }}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="info-item" *ngIf="isAdmin()">
+        <span class="label"> Administrate users:</span>
+        <button
+          style="background-color: green;width: clamp(100px, 150px, 250px);"
+          mat-raised-button
+          class="custom-button"
+          [routerLink]="['/users']"
+        >
+          Mouvy
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>

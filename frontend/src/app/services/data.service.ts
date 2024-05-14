@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment.development';
 import { CookieService } from 'ngx-cookie-service';
 import { Star } from '../../types/star';
 import { Director } from '../../types/director';
+import { RoleName, User } from '../../types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -149,5 +150,77 @@ export class DataService {
         headers: this.headers,
       }
     );
+  }
+  banUser(id: string | undefined): Observable<Object> {
+    return this._httpClient.put(
+      `${this.apiUrl}/user/${id}`,
+      { isBanned: true },
+      {
+        headers: this.headers,
+      }
+    );
+  }
+
+  changeUserRoles(
+    id: string | undefined,
+    roles: RoleName[]
+  ): Observable<Object> {
+    return this._httpClient.put(
+      `${this.apiUrl}/user/${id}/change-roles`,
+      roles,
+      {
+        headers: this.headers,
+      }
+    );
+  }
+
+  addToFavourite(
+    userId: string | undefined,
+    movieId: string | undefined
+  ): Observable<Object> {
+    console.log(userId, movieId);
+    return this._httpClient.post(
+      `${this.apiUrl}/user/${userId}/add-to-favourite/${movieId}`,
+      new Object(),
+      {
+        headers: this.headers,
+      }
+    );
+  }
+
+  removeFromFavourite(
+    userId: string | undefined,
+    movieId: string | undefined
+  ): Observable<Object> {
+    console.log(userId, movieId);
+    return this._httpClient.delete(
+      `${this.apiUrl}/user/${userId}/delete-from-favourite/${movieId}`,
+      {
+        headers: this.headers,
+      }
+    );
+  }
+
+  disBanUser(id: string | undefined): Observable<Object> {
+    console.log(id);
+    return this._httpClient.put(
+      `${this.apiUrl}/user/${id}`,
+      { isBanned: false },
+      {
+        headers: this.headers,
+      }
+    );
+  }
+
+  getUser(id: string): Observable<User> {
+    return this._httpClient.get<User>(`${this.apiUrl}/user/${id}`, {
+      headers: this.headers,
+    });
+  }
+
+  getUsers(): Observable<User[]> {
+    return this._httpClient.get<User[]>(`${this.apiUrl}/user`, {
+      headers: this.headers,
+    });
   }
 }

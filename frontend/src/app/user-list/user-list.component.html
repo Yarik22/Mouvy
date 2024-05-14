@@ -1,0 +1,35 @@
+<div class="user-list">
+  <mat-form-field appearance="fill" class="search-field">
+    <mat-label>Search by email</mat-label>
+    <input
+      matInput
+      placeholder="Search by name"
+      [(ngModel)]="searchText"
+      (ngModelChange)="applyFilter()"
+    />
+  </mat-form-field>
+  <ng-container *ngFor="let user of filteredUsers; let i = index">
+    <div class="user-item">
+      <p>{{ user.email }} : {{ user.username }}</p>
+      <mat-checkbox
+        [(ngModel)]="user.isBanned"
+        (change)="toggleBan(user)"
+        class="ban-checkbox"
+      >
+        Banned
+      </mat-checkbox>
+      @if (isSudo()) {
+      <div class="roles">
+        <mat-checkbox
+          *ngFor="let role of roles"
+          (change)="toggleRole($event, user, role)"
+          [checked]="user.roles.includes(role)"
+        >
+          {{ role }}
+        </mat-checkbox>
+      </div>
+      }
+    </div>
+    <mat-divider></mat-divider>
+  </ng-container>
+</div>

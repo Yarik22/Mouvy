@@ -25,6 +25,7 @@ import { Role } from 'src/auth/role.decorator';
 import { RoleName, User } from './entities/user.entity';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { UpdateUserDto } from './dto/user.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -43,6 +44,39 @@ export class UserController {
         res.redirect(`${this.configService.get('clientUrl')}/login`);
       }),
     );
+  }
+
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiResponse({ status: 200, description: 'User retrieved' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @Get(':id')
+  getUser(@Param('id') id: string): Observable<User> {
+    return this.userService.findById(id, ['movies']);
+  }
+
+  @Role(RoleName.ADMIN)
+  @Put(':id')
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiBody({
+    type: UpdateUserDto,
+    description: 'Updated user details',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Updates the user with the specified ID.',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Observable<UpdateResult> {
+    return this.userService.update(id, updateUserDto);
+  }
+
+  @ApiResponse({ status: 200, description: 'Users retrieved' })
+  @ApiResponse({ status: 404, description: 'Users not found' })
+  @Get()
+  getUsers(): Observable<User[]> {
+    return this.userService.findAll();
   }
 
   @ApiBearerAuth()

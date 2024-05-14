@@ -13,6 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { _isNumberValue } from '@angular/cdk/coercion';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { RoleName } from '../../types/user';
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-movies',
   standalone: true,
@@ -31,9 +33,19 @@ import { RouterLink } from '@angular/router';
   styleUrl: './movies.component.scss',
 })
 export class MoviesComponent implements OnInit {
-  constructor(private readonly dataService: DataService) {}
+  constructor(
+    private readonly dataService: DataService,
+    private readonly auth: AuthService
+  ) {}
   ngOnInit(): void {
     this.fetchMovies();
+    const cookieName = 'authToken';
+    const cookieValue = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${cookieName}=`));
+    if (cookieValue) {
+      this.roles = this.auth.decodeToken(cookieValue).roles;
+    }
   }
   paginatedMovies!: PaginatedMovies;
   page = 1;
@@ -48,6 +60,11 @@ export class MoviesComponent implements OnInit {
   searchedGenres: Genre[] = [];
   searchedPegis: PEGI[] = [];
   minRating: number = 0;
+  roles: RoleName[] = [];
+
+  isAdmin() {
+    return this.roles.some((v) => v === RoleName.ADMIN);
+  }
 
   onSearch(): void {
     this.page = 1;

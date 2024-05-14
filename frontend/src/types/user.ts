@@ -1,4 +1,5 @@
 import { Base } from './base';
+import { Movie } from './movie';
 
 export enum RoleName {
   SUDO = 'sudo',
@@ -13,4 +14,5 @@ export type User = {
   isActivated: boolean;
   isBanned: boolean;
   roles: RoleName[];
+  movies: Movie[];
 } & Base;

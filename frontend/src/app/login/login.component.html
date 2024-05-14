@@ -11,6 +11,9 @@
           formControlName="email"
           placeholder="Enter your email"
         />
+        <mat-error *ngIf="loginForm.get('email')?.hasError('banned')">
+          Your account has been banned.
+        </mat-error>
         <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
           Email is required
         </mat-error>

@@ -5,7 +5,7 @@
         <button mat-icon-button (click)="toggleSidenav()">
           <mat-icon>menu</mat-icon>
         </button>
-        <span class="title">App Title</span>
+        <span class="title">Mouvy</span>
         <button mat-button class="logout" (click)="logout()">Logout</button>
       </mat-toolbar>
     </header>
@@ -26,12 +26,19 @@
             (click)="closeSidenav()"
             >Movies</a
           >
+          <a
+            mat-list-item
+            routerLink="/favourite"
+            routerLinkActive="active"
+            (click)="closeSidenav()"
+            >Favourite</a
+          >
         </mat-nav-list>
       </mat-sidenav>
       <router-outlet></router-outlet>
     </mat-sidenav-container>
     <footer class="footer">
-      <p>© 2024 Your Company</p>
+      <p>© 2024 Clemson</p>
     </footer>
   </div>
 </ng-container>

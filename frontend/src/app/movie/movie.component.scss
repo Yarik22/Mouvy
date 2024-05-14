@@ -1,14 +1,15 @@
 .movie-container {
+  position: relative;
   margin: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-
+  background-color: #f4f4f4;
   .movie-image {
     flex: 0 0 40%; /* Fixed width for the movie image */
-    margin-right: 20px;
+    margin: 0 5vw;
     img {
       width: 55%;
       height: auto;
@@ -58,26 +59,45 @@
 }
 
 .custom-button {
-    display: inline-block;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+
+  /* Default state */
+  background-color: #007bff; /* Blue background color */
+  color: #fff; /* White text color */
+
+  /* Hover state */
+  &:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+
+  /* Active/focus state */
+  &:active,
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); /* Focus outline */
+  }
+}
+.star-container {
+  transform: scale(2);
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  mat-icon {
     cursor: pointer;
-    outline: none;
-    transition: all 0.3s ease;
-  
-    /* Default state */
-    background-color: #007bff; /* Blue background color */
-    color: #fff; /* White text color */
-  
-    /* Hover state */
+    transition: all 0.25s;
+    font-size: 24px;
+    color: #ffd700;
+    margin-right: 4px;
     &:hover {
-      background-color: #0056b3; /* Darker blue on hover */
-    }
-  
-    /* Active/focus state */
-    &:active,
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); /* Focus outline */
+      transform: rotate(145deg);
+      transition: all 0.25s;
     }
   }
+}

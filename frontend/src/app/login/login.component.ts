@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { catchError, throwError } from 'rxjs';
 import { DataService } from '../services/data.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -39,7 +40,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private dataservice: DataService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +66,15 @@ export class LoginComponent implements OnInit {
         )
         .subscribe((response) => {
           if (response && response.token) {
-            this.cookieService.set('authToken', response.token);
+            this.cookieService.set(
+              'authToken',
+              response.token,
+              new Date().getDate() + 1
+            );
+          }
+          if (this.auth.decodeToken(response.token).isBanned) {
+            this.loginForm.get('email')?.setErrors({ banned: true });
+            return;
           }
           this.router.navigate(['/home']);
         });

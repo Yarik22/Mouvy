@@ -1,5 +1,13 @@
 <ng-container *ngIf="movie">
   <div class="movie-container">
+    <div class="star-container">
+      <mat-icon *ngIf="isMovieAdded" (click)="removeFromFav()">
+        star
+      </mat-icon>
+      <mat-icon *ngIf="!isMovieAdded" (click)="addToFav()">
+        star_border
+      </mat-icon>
+    </div>
     <div class="movie-image">
       <img [src]="movie.imageUrl" alt="Movie Poster" />
     </div>

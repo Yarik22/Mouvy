@@ -64,12 +64,13 @@
           >
         </button>
         <button
+          style="margin-top: 5px"
           mat-raised-button
           class="custom-button"
           type="submit"
           [routerLink]="['/movies/', paginatedMovies.movies[0].id]"
         >
-          Mouvy
+          Mouvy Info
         </button>
       </div>
     </div>
@@ -97,14 +98,14 @@
     </div>
   </div>
 </ng-container>
-<div class="search-container">
+<div class="search-container" *ngIf="isAdmin()">
   <button
-  style="background-color: green;"
+    style="background-color: green"
     mat-raised-button
     class="custom-button"
     type="submit"
     [routerLink]="['/movies/', 'add']"
   >
-    Mouvy
+    Mouvy Add
   </button>
 </div>
